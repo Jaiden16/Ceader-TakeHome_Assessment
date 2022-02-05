@@ -5,6 +5,30 @@ const db = require('../db');
 //view all appointments - check
 //filter appointments by doctor
 
+
+//edit.delete appointment
+const cancelAppintment = async (req, res, next) => {
+    try {
+        let query = `Delete from appointments Where id = ${req.body.id} RETURNING *`
+        let data = db.any(query)
+        res.json({
+            data: data,
+            message: "APP Deleteed"
+        }).status(200)
+        
+    } catch (err) {
+        res.json({
+            data: err,
+            message: "no appointment there"
+        }).status(404)
+        console.log(err)
+
+    }
+
+
+}
+
+
 //edit/patch appointment
 const patchAppointment = async (req, res, next) => {
     let patch;
@@ -54,19 +78,19 @@ const patchAppointment = async (req, res, next) => {
         }
 
         let index = query.lastIndexOf(',');
-        if(query[index] === ','){
+        if (query[index] === ',') {
             let lastIndex = query.lastIndexOf(',');
-            let newString = query.substring(0,lastIndex);
+            let newString = query.substring(0, lastIndex);
             query = newString;
         }
 
         let fullQuery = query + endQuery;
         console.log(fullQuery)
-        patch = await db.one(fullQuery,userUpdates);
+        patch = await db.one(fullQuery, userUpdates);
 
 
         res.json({
-            data:patch,
+            data: patch,
             message: "success"
         }).status(200)
 
@@ -133,4 +157,4 @@ const getAppointments = async (req, res, next) => {
     }
 }
 
-module.exports = { createAppointment, getAppointments,patchAppointment };
+module.exports = { createAppointment, getAppointments, patchAppointment, cancelAppintment };
