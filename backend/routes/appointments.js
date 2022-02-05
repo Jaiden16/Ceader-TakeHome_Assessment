@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const {getAppointments, createAppointment} = require('../database/queries/appointments_db');
+const {getAppointments, createAppointment, patchAppointment} = require('../database/queries/appointments_db');
 
 router.get("/appointments",getAppointments);
-router.post("/appointments/create",createAppointment);
+router.post("/appointments",createAppointment);
+router.patch("/appointments",patchAppointment);
 
 module.exports = router;
