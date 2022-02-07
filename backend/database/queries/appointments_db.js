@@ -9,7 +9,7 @@ const db = require('../db');
 //edit.delete appointment
 const cancelAppintment = async (req, res, next) => {
     try {
-        let query = `Delete from appointments Where id = ${req.body.id} RETURNING *`
+        let query = `Delete from appointments Where id = ${req.params.id} RETURNING *`
         let data = db.any(query)
         res.json({
             data: data,
@@ -35,14 +35,14 @@ const patchAppointment = async (req, res, next) => {
     // const selection = `apt_month, apt_day, apt_year,apt_hour,
     // apt_min, apt_doctor_first, apt_doctor_last`
     let userUpdates = {
-        id: parseInt(req.body.id),
+        id: parseInt(req.params.id),
         month: parseInt(req.body.month),
         day: parseInt(req.body.day),
         year: parseInt(req.body.year),
         hour: parseInt(req.body.hour),
         min: parseInt(req.body.min),
-        first: req.body.first,
-        last: req.body.last
+        doctor: req.body.doctor,
+        
     }
 
     try {
@@ -69,13 +69,11 @@ const patchAppointment = async (req, res, next) => {
             query += "apt_min = $/min/, "
         }
 
-        if (req.body.first) {
-            query += "apt_doctor_first = $/first/, "
+        if (req.body.doctor) {
+            query += "apt_doctor = $/doctor/, "
         }
 
-        if (req.body.last) {
-            query += "apt_doctor_last = $/last/, "
-        }
+        
 
         let index = query.lastIndexOf(',');
         if (query[index] === ',') {
@@ -112,10 +110,10 @@ const patchAppointment = async (req, res, next) => {
 //create an appointment
 const createAppointment = async (req, res, next) => {
     const selection = `apt_month, apt_day, apt_year,apt_hour,
-    apt_min, apt_doctor_first, apt_doctor_last`
+    apt_min, apt_doctor`
 
     let query1 = `INSERT INTO appointments(${selection})`
-    let value = 'Values(${month},${day},${year},${hour},${min},${first},${last}) RETURNING*';
+    let value = 'Values(${month},${day},${year},${hour},${min},${doctor}) RETURNING*';
     let select = query1 + value
     try {
         let createdAppointment = await db.one(select, req.body);
@@ -134,14 +132,32 @@ const createAppointment = async (req, res, next) => {
 }
 
 
+//getSingleAppointment
+//view all appointment
+const getAppointment = async (req, res, next) => {
+    const selection = `id, apt_month, apt_day, apt_year,apt_hour,
+    apt_min, apt_doctor`
+    try {
+        const appointment = await db.any(`Select ${selection} From appointments Where id = ${req.params.id}`)
+        res.json({
+            appointment: appointment,
+            message: `success`
+        }).status(200);
 
+    } catch (err) {
+        res.json({
+            err: err
+        })
+        console.log(err);
+    }
+}
 
 
 
 //view all appointment
 const getAppointments = async (req, res, next) => {
     const selection = `id, apt_month, apt_day, apt_year,apt_hour,
-    apt_min, apt_doctor_first, apt_doctor_last`
+    apt_min, apt_doctor`
     try {
         const appointments = await db.any(`Select ${selection} From appointments`)
         res.json({
@@ -157,4 +173,4 @@ const getAppointments = async (req, res, next) => {
     }
 }
 
-module.exports = { createAppointment, getAppointments, patchAppointment, cancelAppintment };
+module.exports = { createAppointment, getAppointments, patchAppointment, cancelAppintment, getAppointment };

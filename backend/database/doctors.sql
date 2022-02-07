@@ -7,8 +7,7 @@ CREATE DATABASE doctorsapi;
 CREATE Table doctors
 (
     id Serial PRIMARY KEY,
-    doctor_first VARCHAR,
-    doctor_last VARCHAR
+    doctor VARCHAR
 );
 
 CREATE Table appointments
@@ -19,20 +18,19 @@ CREATE Table appointments
     apt_year int,
     apt_hour int,
     apt_min int,
-    apt_doctor_first VARCHAR,
-    apt_doctor_last VARCHAR
+    apt_doctor VARCHAR
 );
 
 INSERT into doctors
-    (doctor_first,doctor_last)
+    (doctor)
 VALUES
-    ('Richard', 'Harris'),
-    ('Anita', 'Narulo'),
-    ('James', 'Williams');
+    ('Richard Harris'),
+    ('Anita Narulo'),
+    ('James Williams');
 
 INSERT into appointments
-    ( apt_month, apt_day, apt_year, apt_hour, apt_min, apt_doctor_first, apt_doctor_last)
+    ( apt_month, apt_day, apt_year, apt_hour, apt_min, apt_doctor)
 VALUES
-    (2,14,2022,8,30,'Richard','Harris'),
-    (2,14,2022,8,30,'Anita','Narulo'),
-    (2,20,2022,8,30,'James','Williams');
+    (2,14,2022,8,30,'Richard Harris'),
+    (2,18,2022,10,30,'Anita Narulo'),
+    (2,20,2022,8,30,'James Williams');
