@@ -155,10 +155,10 @@ export default function Appointments() {
                 </div>
             </div>
 
-            {searchTerm ? filterDocotor(appointments) : app(appointments)}
+            {/* {searchTerm ? filterDocotor(appointments) : app(appointments)} */}
 
-            {/* {edit ? searchTerm ? filterDocotor(appointments) : app(appointments): <EditApp id={id}
-                cancel={cancelFunction} />} */}
+            {edit ? searchTerm ? filterDocotor(appointments) : app(appointments): <EditApp id={id}
+                cancel={cancelFunction} />}
         </div>
     )
 }
